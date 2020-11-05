@@ -18,25 +18,26 @@
     By Doug Tolton
 """
 
-import sys
-import zipfile
+import getopt
 import os
 import os.path
-import getopt
+import sys
+import zipfile
 
-class unzip:
+
+class Unzip:
     def __init__(self, verbose = False, percent = 10):
         self.verbose = False
         self.percent = percent
-        
-    def extract(self, file, dir):
-        if not dir.endswith(':') and not os.path.exists(dir):
-            os.mkdir(dir)
+
+    def extract(self, file, directory):
+        if not directory.endswith(':') and not os.path.exists(directory):
+            os.mkdir(directory)
 
         zf = zipfile.ZipFile(file)
 
         # create directory structure to house files
-        self._createstructure(file, dir)
+        self._createstructure(file, directory)
 
         num_files = len(zf.namelist())
         percent = self.percent
@@ -47,13 +48,13 @@ class unzip:
         for i, name in enumerate(zf.namelist()):
 
             if self.verbose == True:
-                print "Extracting %s" % name
+                print("Extracting %s" % name)
             elif perc > 0 and (i % perc) == 0 and i > 0:
                 complete = int (i / perc) * percent
                 #print "%s%% complete" % complete
 
             if not name.endswith('/'):
-                outfile = open(os.path.join(dir, name), 'wb')
+                outfile = open(os.path.join(directory, name), 'wb')
                 outfile.write(zf.read(name))
                 outfile.flush()
                 outfile.close()
@@ -84,15 +85,15 @@ class unzip:
             dirsname = name.split("/")
             ant=""
             for dirname in dirsname[:-1]:
-				dirs.append(ant+dirname)
-				#print "anadiendo:"+(ant+dirname)
-				ant=ant+dirname+"/"
+                dirs.append(ant+dirname)
+                #print "anadiendo:"+(ant+dirname)
+                ant=ant+dirname+"/"
 
         dirs.sort()
         return dirs
 
 def usage():
-    print """usage: unzip.py -z <zipfile> -o <targetdir>
+    print("""usage: unzip.py -z <zipfile> -o <targetdir>
     <zipfile> is the source zipfile to extract
     <targetdir> is the target destination
 
@@ -105,42 +106,4 @@ def usage():
     --verbose
     --percent=10
     --zipfile=<zipfile>
-    --outdir=<targetdir>"""
-    
-
-def main():
-    shortargs = 'vhp:z:o:'
-    longargs = ['verbose', 'help', 'percent=', 'zipfile=', 'outdir=']
-
-    unzipper = unzip()
-
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], shortargs, longargs)
-    except getopt.GetoptError:
-        usage()
-        sys.exit(2)
-
-    zipsource = ""
-    zipdest = ""
-
-    for o, a in opts:
-        if o in ("-v", "--verbose"):
-            unzipper.verbose = True
-        if o in ("-p", "--percent"):
-            if not unzipper.verbose == True:
-                unzipper.percent = int(a)
-        if o in ("-z", "--zipfile"):
-            zipsource = a
-        if o in ("-o", "--outdir"):
-            zipdest = a
-        if o in ("-h", "--help"):
-            usage()
-            sys.exit()
-
-    if zipsource == "" or zipdest == "":
-        usage()
-        sys.exit()
-            
-    unzipper.extract(zipsource, zipdest)
-
-if __name__ == '__main__': main()
+    --outdir=<targetdir>""")
