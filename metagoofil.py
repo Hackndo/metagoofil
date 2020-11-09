@@ -37,8 +37,8 @@ def doprocess():
     )
 
     parser.add_argument('domain', action='store', help='Domain to search')
-    parser.add_argument('-t', '--types', action='store', default='pdf,doc,xls,ppt,docx,xlsx,pptx',
-                            help='Filetype to download (pdf,doc,xls,ppt,docx,xlsx,pptx)')
+    parser.add_argument('-t', '--types', action='store', default='pdf,doc,xls,ppt,docx,xlsx,pptx', help='Filetype to download (pdf,doc,xls,ppt,docx,xlsx,pptx)')
+    parser.add_argument('--inurl', action='store_true', help='Set "inurl" filter instead of "site" filter on Google. Might find some false positives')
     parser.add_argument('-r', '--results-limit', type=int, action='store', default=200,
                             help='Limit of results to search (Default 200)')
     parser.add_argument('-s', '--results-start', type=int, action='store', default=0,
@@ -88,7 +88,8 @@ def doprocess():
                 domain,
                 offset=args.results_start,
                 results_limit=results_limit,
-                filetype=filetype
+                filetype=filetype,
+                inurl=args.inurl
             )
             search.process_files()
             files = search.get_files()

@@ -3,10 +3,11 @@ import re
 
 
 class parser:
-    def __init__(self, results, word=""):
+    def __init__(self, results, word="", inurl=False):
         self.results = results
         self.word = word
         self.temp = []
+        self.inurl = inurl
 
     def genericClean(self):
         if isinstance(self.results, bytes):
@@ -47,7 +48,7 @@ class parser:
         for z in allurls:
             y = z.replace('/url?q=', '')
             x = y.split('&')[0]
-            if any(k in x for k in ['webcache','google.com']) or not x.startswith("http") or self.word not in x:
+            if any(k in x for k in ['webcache','google.com']) or not x.startswith("http") or (self.word not in x and not self.inurl):
                 pass
             else:
                 urls.append(x)

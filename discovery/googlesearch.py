@@ -6,12 +6,13 @@ import time
 
 
 class search_google:
-    def __init__(self, domain_name, offset=0, results_limit=200, filetype="pdf"):
+    def __init__(self, domain_name, offset=0, results_limit=200, filetype="pdf",inurl=False):
         self.domain_name = domain_name
         self.offset = offset
         self.results = b""
         self.totalresults = b""
         self.filetype = filetype
+        self.inurl = inurl
         self.server = "https://www.google.com"
         self.hostname = "www.google.com"
         self.userAgent = "(Mozilla/5.0 (Windows; U; Windows NT 6.0;en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6"
@@ -36,7 +37,7 @@ class search_google:
             "start": offset,
             "hl": "en",
             "meta": "",
-            "q": f"filetype:{self.filetype} site:{self.domain_name}"
+            "q": f"filetype:{self.filetype} {'inurl' if self.inurl else 'site'}:{self.domain_name}"
         }
 
         print("Requested URL: " + self.server + "/search?" + urlencode(params))
@@ -56,7 +57,7 @@ class search_google:
         return rawres.hostnames()
 
     def get_files(self):
-        rawres = myparser.parser(self.totalresults, self.domain_name)
+        rawres = myparser.parser(self.totalresults, self.domain_name, self.inurl)
         return rawres.fileurls()
 
     def process_files(self):
