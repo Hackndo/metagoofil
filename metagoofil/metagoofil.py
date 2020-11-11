@@ -9,6 +9,8 @@ from metagoofil.discovery.googlesearch import GoogleSearch
 from metagoofil.downloader import Downloader
 from metagoofil.extractor import Extractor
 
+supported_extensions = ["pdf", "doc", "docx", "xls", "xlsx", "ppt" , "pptx", "odt", "ods", "odg", "odp"]
+
 
 class Metagoofil:
     def __init__(
@@ -67,8 +69,8 @@ class Metagoofil:
     def get_remote_documents(self):
         logging.success("Grabbing remote documents")
         for file_type in self.file_types:
-            logging.info(f"Downloading {file_type} files...")
-            if file_type not in "pdf,doc,xls,ppt,docx,xlsx,pptx".split(","):
+            logging.success(f"Downloading {file_type} files...")
+            if file_type not in supported_extensions:
                 logging.warning(f"Filetype {file_type} is not supported")
                 continue
 
@@ -153,9 +155,11 @@ def run():
         description='Metagoofil v{} - Metadata harvester'.format(version)
     )
 
-    parser.add_argument('domain', action='store', help='Domain to search')
-    parser.add_argument('-t', '--types', action='store', default='pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odg,odp',
-                        help='Filetype to download (pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odg,odp)')
+    parser.add_argument('-d', '--domain', action='store', help='Domain to search')
+    parser.add_argument('-w', '--working-dir', action='store', default='.', help='Working directory')
+
+    parser.add_argument('-t', '--types', action='store', default=",".join(supported_extensions),
+                        help=f'Filetype to download ({",".join(supported_extensions)})')
     parser.add_argument('--inurl', action='store_true',
                         help='Set "inurl" filter instead of "site" filter on Google. Might find some false positives')
     parser.add_argument('-r', '--results-limit', type=int, action='store', default=100,
@@ -165,8 +169,6 @@ def run():
     parser.add_argument('-l', '--local', action='store_true',
                         help='Local analysis of documents in working directory')
     parser.add_argument('-f', '--files-limit', type=int, action='store', default=5, help='Limit of files to download')
-    parser.add_argument('-w', '--working-dir', action='store', default='.', help='Working directory')
-    parser.add_argument('--html', action='store', default='output.html', help='Output HTML filename')
     parser.add_argument('--force', action='store_true', help='Force download even if files exists')
     parser.add_argument('--wait', action='store', type=int, default=1,
                         help='Time to wait between requests (Default: 1s)')
@@ -189,6 +191,11 @@ def run():
         logging.getLogger().setLevel(logging.DEBUG)
     else:
         logging.getLogger().setLevel(logging.ERROR)
+
+    if args.domain is None and not args.local:
+        logging.getLogger().setLevel(logging.INFO)
+        logging.warning("You must choose between online (--domain) and offline (--local)")
+        sys.exit(1)
 
     file_types = [t.strip() for t in args.types.split(',')]
 
