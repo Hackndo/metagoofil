@@ -1,12 +1,8 @@
 import logging
-import random
 import re
 import zipfile
-import os
 
-from metagoofil import parser
 from metagoofil.extractors.imetadataextractor import IMetadataExtractor
-from metagoofil.parser import Parser
 
 
 class MetadataExtractor(IMetadataExtractor):
@@ -45,7 +41,7 @@ class MetadataExtractor(IMetadataExtractor):
         except:
             logging.debug("No comments.xml file")
         zip.close()
-        self.parser = Parser(self.content)
+        self.parser.set_content(self.content)
         return self.content != ""
 
     def get_users(self):

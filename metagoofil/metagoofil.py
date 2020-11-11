@@ -154,8 +154,8 @@ def run():
     )
 
     parser.add_argument('domain', action='store', help='Domain to search')
-    parser.add_argument('-t', '--types', action='store', default='pdf,doc,xls,ppt,docx,xlsx,pptx,odt,ods,odg,odp',
-                        help='Filetype to download (pdf,doc,xls,ppt,docx,xlsx,pptx,odt,ods,odg,odp)')
+    parser.add_argument('-t', '--types', action='store', default='pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odg,odp',
+                        help='Filetype to download (pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odg,odp)')
     parser.add_argument('--inurl', action='store_true',
                         help='Set "inurl" filter instead of "site" filter on Google. Might find some false positives')
     parser.add_argument('-r', '--results-limit', type=int, action='store', default=100,

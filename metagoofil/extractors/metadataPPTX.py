@@ -10,9 +10,11 @@ class MetadataExtractor(MetadataDOCX):
     def get_content(self):
         zip = zipfile.ZipFile(self.file_name, 'r')
         try:
-            self.content += zip.read('xl/sharedStrings.xml').decode('utf-8')
+            for file in zip.namelist():
+                if "ppt/slides/slide" in file:
+                    self.content += zip.read(file).decode('utf-8')
         except Exception as e:
-            logging.debug("No sharedStrings.xml file")
+            logging.debug("No slideX.xml file")
         zip.close()
         self.parser.set_content(self.content)
         return self.content != ""

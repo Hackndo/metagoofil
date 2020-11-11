@@ -1,5 +1,7 @@
 import logging
 
+from metagoofil.parser import Parser
+
 
 class IMetadataExtractor:
     def __init__(self, file_name):
@@ -11,7 +13,7 @@ class IMetadataExtractor:
         self.shares = []
         self.software = []
         self.companies = []
-        self.parser = None
+        self.parser = Parser()
 
     def get_results(self):
         return {

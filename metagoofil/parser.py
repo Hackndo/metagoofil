@@ -3,11 +3,21 @@ import re
 
 
 class Parser:
-    def __init__(self, results, word="", inurl=False):
-        self.results = results if isinstance(results, str) else results.decode('utf-8')
+    def __init__(self, results=b"", word="", inurl=False):
+        try:
+            self.results = results.decode('utf-8')
+        except AttributeError:
+            self.results = results
+
         self.domain_name = word
         self.temp = []
         self.inurl = inurl
+
+    def set_content(self, results):
+        try:
+            self.results = results.decode('utf-8')
+        except AttributeError:
+            self.results = results
 
     def generic_clean(self):
         results = self.results

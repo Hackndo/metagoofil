@@ -2,7 +2,6 @@ import re
 import zipfile
 
 from metagoofil.extractors.imetadataextractor import IMetadataExtractor
-from metagoofil.parser import Parser
 
 
 class MetadataExtractor(IMetadataExtractor):
@@ -27,7 +26,7 @@ class MetadataExtractor(IMetadataExtractor):
         zip = zipfile.ZipFile(self.file_name, 'r')
         self.content = zip.read('content.xml').decode('utf-8')
         zip.close()
-        self.parser = Parser(self.content)
+        self.parser.set_content(self.content)
         return self.content
 
     def get_emails(self):

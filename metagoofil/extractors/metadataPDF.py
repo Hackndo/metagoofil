@@ -9,7 +9,6 @@ from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdftypes import resolve1
 
-from metagoofil.parser import Parser
 from metagoofil.extractors.imetadataextractor import IMetadataExtractor
 
 
@@ -41,7 +40,7 @@ class MetadataExtractor(IMetadataExtractor):
         self.content = content.getvalue()
         device.close()
         content.close()
-        self.parser = Parser(self.content)
+        self.parser.set_content(self.content)
         return self.content
 
     def get_data(self):
