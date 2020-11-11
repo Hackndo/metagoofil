@@ -18,10 +18,8 @@
     By Doug Tolton
 """
 
-import getopt
 import os
 import os.path
-import sys
 import zipfile
 
 

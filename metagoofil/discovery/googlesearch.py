@@ -1,11 +1,13 @@
-import random
-import requests, sys
-import myparser
+import logging
+
+import requests
 from urllib.parse import urlencode
 import time
 
+from metagoofil.parser import Parser
 
-class search_google:
+
+class GoogleSearch:
     def __init__(self, domain_name, offset=0, results_limit=200, filetype="pdf",inurl=False):
         self.domain_name = domain_name
         self.offset = offset
@@ -40,28 +42,18 @@ class search_google:
             "q": f"filetype:{self.filetype} {'inurl' if self.inurl else 'site'}:{self.domain_name}"
         }
 
-        print("Requested URL: " + self.server + "/search?" + urlencode(params))
+        logging.debug("Requested URL: " + self.server + "/search?" + urlencode(params))
 
         h = requests.get(self.server + "/search", params=params, headers=headers)
         if h.status_code != 200:
-            print(f"An error occurred while requesting Google (Error code {h.status_code})")
+            logging.debug(f"An error occurred while requesting Google (Error code {h.status_code})")
             return
         self.totalresults += h.content
 
-    def get_emails(self):
-        rawres = myparser.parser(self.totalresults, self.domain_name)
-        return rawres.emails()
-
-    def get_hostnames(self):
-        rawres = myparser.parser(self.totalresults, self.domain_name)
-        return rawres.hostnames()
-
-    def get_files(self):
-        rawres = myparser.parser(self.totalresults, self.domain_name, self.inurl)
-        return rawres.fileurls()
-
-    def process_files(self):
+    def search(self):
         while self.counter < self.results_limit:
             self.do_search_files(self.counter + self.offset, min(100, self.results_limit - self.counter))
             time.sleep(2)
             self.counter += 100
+        parser = Parser(self.totalresults, self.domain_name, self.inurl)
+        return parser.file_urls()
