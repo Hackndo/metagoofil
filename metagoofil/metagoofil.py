@@ -85,33 +85,36 @@ class Metagoofil:
             results = google_search.search()
 
             if len(results) == 0:
-                logging.debug("No file found.")
+                logging.info("No file found.")
                 continue
             
             logging.debug(f"{len(results)} files found")
 
             if self.f_limit == 0:
-                logging.info("No file should be downloaded. Skipping.")
+                logging.success("No file should be downloaded. Skipping.")
                 continue
 
             logging.debug(f"Starting to download {self.f_limit} files")
+            counter = 0
             for result in results:
-                if len(self.documents) < self.f_limit:
-                    logging.debug(f"[{len(self.documents) + 1}/{self.f_limit}] " + result)
+                if counter < self.f_limit:
+                    logging.debug(f"[{counter + 1}/{self.f_limit}] " + result)
                     downloader = Downloader(result, self.working_directory, file_type)
 
                     file_path = downloader.download(wait=self.wait, jitter=self.jitter, force=self.force)
                     if not file_path or file_path == "":
                         logging.warning(f"Failed to download {result}")
                         continue
+                    logging.success(f"{file_path} downloaded")
+                    counter += 1
                     self.documents.append(file_path)
         return True
 
     def analyse_documents(self):
         logging.success(f"Analysing {len(self.documents)} documents")
-        counter = 1
+        counter = 0
         for file_path in self.documents:
-            logging.success(f"[{counter}/{len(self.documents)}] {file_path}")
+            logging.success(f"[{counter + 1}/{len(self.documents)}] {file_path}")
 
             extractor = Extractor(file_path).load()
             if extractor is None:

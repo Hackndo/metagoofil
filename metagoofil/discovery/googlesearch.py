@@ -1,8 +1,9 @@
 import logging
+import sys
+import time
+from urllib.parse import urlencode
 
 import requests
-from urllib.parse import urlencode
-import time
 
 from metagoofil.parser import Parser
 
@@ -45,6 +46,9 @@ class GoogleSearch:
         logging.debug("Requested URL: " + self.server + "/search?" + urlencode(params))
 
         h = requests.get(self.server + "/search", params=params, headers=headers)
+        if h.status_code == 429:
+            logging.error("Google is blocking your requests. You should wait or validate captcha manually.")
+            sys.exit()
         if h.status_code != 200:
             logging.debug(f"An error occurred while requesting Google (Error code {h.status_code})")
             return
