@@ -28,13 +28,13 @@ python setup.py install
 
 ```shell script
 # Simple use
-metagoofil -w /tmp/mydomain my.domain.com
+metagoofil -w /tmp/mydomain -d my.domain.com
 
 # Detection only (no download)
-metagoofil -w /tmp/mydomain -f 0 my.domain.com 
+metagoofil -w /tmp/mydomain -f 0 -d my.domain.com 
 
 # Stealth
-metagoofil -w /tmp/mydomain --results-limit 20 --results-start 0 --files-limit 10 --wait 15 --jitter 30 -t doc,docx,xls,xlsx,pdf my.domain.com
+metagoofil -w /tmp/mydomain --results-limit 20 --results-start 0 --files-limit 10 --wait 15 --jitter 30 -t doc,docx,xls,xlsx,pdf -d my.domain.com
 
 # Local analysis
 metagoofil -w /tmp/mydomain --local
