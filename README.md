@@ -18,18 +18,24 @@ This new version will also extract emails addresses from PDF and Word documents 
 
 The tool first perform a query in Google requesting different filetypes that can have useful metadata (pdf, doc, xls,ppt,etc), then will download those documents to the disk and extracts the metadata of the file using specific libraries for parsing different file types (Hachoir, Pdfminer, etc)
 
+## Install
+
+```shell script
+python setup.py install
+```
+
 ## Example
 
-```
+```shell script
 # Simple use
-python metagoofil.py -w /tmp/mydomain my.domain.com
+metagoofil -w /tmp/mydomain my.domain.com
 
 # Detection only (no download)
-python metagoofil.py -w /tmp/mydomain -f 0 my.domain.com 
+metagoofil -w /tmp/mydomain -f 0 my.domain.com 
 
 # Stealth
-python metagoofil.py -w /tmp/mydomain --results-limit 20 --results-start 0 --files-limit 10 --wait 15 --jitter 30 -t doc,docx,xls,xlsx,pdf my.domain.com
+metagoofil -w /tmp/mydomain --results-limit 20 --results-start 0 --files-limit 10 --wait 15 --jitter 30 -t doc,docx,xls,xlsx,pdf my.domain.com
 
 # Local analysis
-python metagoofil.py -w /tmp/mydomain -l LOCAL
+metagoofil -w /tmp/mydomain --local
 ```
