@@ -25,6 +25,7 @@ class Metagoofil:
             inurl=False,
             wait=1,
             jitter=0,
+            cookies="",
             force=False
     ):
         self.file_types = file_types
@@ -37,6 +38,7 @@ class Metagoofil:
         self.inurl = inurl
         self.wait = wait
         self.jitter = jitter
+        self.cookies = cookies
         self.force = force
         self.documents = []
 
@@ -67,9 +69,9 @@ class Metagoofil:
         return True
 
     def get_remote_documents(self):
-        logging.success("Grabbing remote documents")
+        logging.success("Fetching remote documents")
         for file_type in self.file_types:
-            logging.success(f"Downloading {file_type} files...")
+            logging.success(f"Fetching {file_type} files...")
             if file_type not in supported_extensions:
                 logging.warning(f"Filetype {file_type} is not supported")
                 continue
@@ -80,7 +82,8 @@ class Metagoofil:
                 offset=self.r_offset,
                 results_limit=self.r_limit,
                 filetype=file_type,
-                inurl=self.inurl
+                inurl=self.inurl,
+                cookies=self.cookies
             )
             results = google_search.search()
 
@@ -88,7 +91,7 @@ class Metagoofil:
                 logging.info("No file found.")
                 continue
             
-            logging.debug(f"{len(results)} files found")
+            logging.success(f"{len(results)} files found")
 
             if self.f_limit == 0:
                 logging.success("No file should be downloaded. Skipping.")
@@ -136,7 +139,7 @@ class Metagoofil:
                 counter += 1
                 continue
             counter += 1
-        return self.results
+        return len(self.documents) == 0 or self.results
 
     def output_results(self):
         for key, values in self.results.items():
@@ -177,6 +180,7 @@ def run():
                         help='Time to wait between requests (Default: 1s)')
     parser.add_argument('--jitter', action='store', type=int, default=0,
                         help='Jitter to apply to wait between request (0 to 100, default: 0)')
+    parser.add_argument('--cookies', action='store', default='', help='Custom cookies to use for requesting Google')
     parser.add_argument('-V', '--version', action='store', help='Version')
     parser.add_argument('-v', action='count', default=0, help='Verbosity level (-v or -vv)')
 
@@ -213,6 +217,7 @@ def run():
         inurl=args.inurl,
         wait=args.wait,
         jitter=args.jitter,
+        cookies=args.cookies,
         force=args.force
     )
 

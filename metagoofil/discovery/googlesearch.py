@@ -9,13 +9,14 @@ from metagoofil.parser import Parser
 
 
 class GoogleSearch:
-    def __init__(self, domain_name, offset=0, results_limit=200, filetype="pdf",inurl=False):
+    def __init__(self, domain_name, offset=0, results_limit=200, filetype="pdf", inurl=False, cookies=""):
         self.domain_name = domain_name
         self.offset = offset
         self.results = b""
         self.totalresults = b""
         self.filetype = filetype
         self.inurl = inurl
+        self.cookies = cookies
         self.server = "https://www.google.com"
         self.hostname = "www.google.com"
         self.userAgent = "(Mozilla/5.0 (Windows; U; Windows NT 6.0;en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6"
@@ -32,7 +33,7 @@ class GoogleSearch:
             'Accept-Encoding': 'gzip, deflate',
             'DNT': '1',
             'Connection': 'keep-alive',
-            'Cookie': '',
+            'Cookie': self.cookies,
             'Upgrade-Insecure-Requests': '1'
         }
         params = {
@@ -47,7 +48,8 @@ class GoogleSearch:
 
         h = requests.get(self.server + "/search", params=params, headers=headers)
         if h.status_code == 429:
-            logging.error("Google is blocking your requests. You should wait or validate captcha manually.")
+            logging.error("Google is blocking your requests."
+                          "You can try and set --cookies with valid google.com cookies")
             sys.exit()
         if h.status_code != 200:
             logging.debug(f"An error occurred while requesting Google (Error code {h.status_code})")
