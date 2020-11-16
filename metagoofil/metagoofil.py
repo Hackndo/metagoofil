@@ -169,12 +169,13 @@ def run():
     parser.add_argument('--inurl', action='store_true',
                         help='Set "inurl" filter instead of "site" filter on Google. Might find some false positives')
     parser.add_argument('-r', '--results-limit', type=int, action='store', default=100,
-                        help='Limit of results to search (Default 100)')
+                        help='Limit of results to search (Default: 100)')
     parser.add_argument('-s', '--results-start', type=int, action='store', default=0,
-                        help='Offset to look for results (Default 0)')
+                        help='Offset to look for results (Default: 0)')
     parser.add_argument('-l', '--local', action='store_true',
                         help='Local analysis of documents in working directory')
-    parser.add_argument('-f', '--files-limit', type=int, action='store', default=5, help='Limit of files to download')
+    parser.add_argument('-f', '--files-limit', type=int, action='store', default=5,
+                        help='Limit of files to download (Default: 5)')
     parser.add_argument('--force', action='store_true', help='Force download even if files exists')
     parser.add_argument('--wait', action='store', type=int, default=1,
                         help='Time to wait between requests (Default: 1s)')
