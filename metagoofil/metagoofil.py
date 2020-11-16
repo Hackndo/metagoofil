@@ -108,8 +108,9 @@ class Metagoofil:
                     if not file_path or file_path == "":
                         logging.warning(f"Failed to download {result}")
                         continue
-                    logging.success(f"{file_path} downloaded")
+
                     counter += 1
+                    logging.success(f"[{counter}/{min(self.f_limit, len(results))}] {file_path} downloaded")
                     self.documents.append(file_path)
         return True
 
